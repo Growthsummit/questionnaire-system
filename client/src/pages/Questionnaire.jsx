@@ -90,7 +90,8 @@ export default function Questionnaire({ setPage, addResponse }) {
     setSubmitting(true);
     const payload = { ...form };
 
-    const response = await fetch('/api/responses', {
+    const API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+    const response = await fetch(`${API_URL}/api/responses`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

@@ -13,7 +13,8 @@ export default function App() {
   const [responses, setResponses] = useState([]);
 
   useEffect(() => {
-    fetch('/api/responses')
+    const API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+    fetch(`${API_URL}/api/responses`)
       .then((res) => res.json())
       .then((data) => setResponses(data))
       .catch((error) => {
