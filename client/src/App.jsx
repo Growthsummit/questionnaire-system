@@ -15,7 +15,14 @@ export default function App() {
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
     fetch(`${API_URL}/api/responses`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`Server returned ${res.status}`);
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Server did not return JSON');
+        }
+        return res.json();
+      })
       .then((data) => setResponses(data))
       .catch((error) => {
         console.error('Unable to load responses from the API:', error);
