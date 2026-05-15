@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+.env.local
+.env.production.local
+.env.test.local
+.DS_Store
+*.ibd
+*.frm
+*.db
+questionnaire_db/
