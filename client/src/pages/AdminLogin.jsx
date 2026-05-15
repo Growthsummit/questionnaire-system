@@ -9,7 +9,11 @@ export default function AdminLogin({ setPage, setToken }) {
     setError('');
     setLoading(true);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+      let API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+      if (API_URL.endsWith('/')) {
+        API_URL = API_URL.slice(0, -1);
+      }
+
       const res = await fetch(`${API_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

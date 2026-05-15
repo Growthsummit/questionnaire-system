@@ -4,11 +4,16 @@ import responsesRouter from './routes/responses.js';
 import adminRouter from './routes/admin.js';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow all origins for now to resolve "Failed to fetch"
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.use('/api/responses', responsesRouter);
 app.use('/api/admin', adminRouter);
+app.get('/api/ping', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.get('/', (req, res) => res.send('Questionnaire-system server is running.'));
 
 const port = process.env.PORT || 4000;

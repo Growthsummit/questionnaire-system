@@ -13,7 +13,12 @@ export default function App() {
   const [responses, setResponses] = useState([]);
 
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+    let API_URL = import.meta.env.VITE_API_URL || 'https://questionnaire-api-2t7v.onrender.com';
+    // Remove trailing slash if present
+    if (API_URL.endsWith('/')) {
+      API_URL = API_URL.slice(0, -1);
+    }
+    
     fetch(`${API_URL}/api/responses`)
       .then((res) => {
         if (!res.ok) throw new Error(`Server returned ${res.status}`);
