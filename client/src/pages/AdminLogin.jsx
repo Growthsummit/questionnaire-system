@@ -15,13 +15,17 @@ export default function AdminLogin({ setPage, setToken }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(creds),
       });
-      if (!res.ok) throw new Error('Invalid credentials');
       const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+
       localStorage.setItem('mf_admin_token', data.token);
       setToken(data.token);
       setPage('dashboard');
     } catch (err) {
-      setError('Invalid username or password. Please try again.');
+      setError(err.message || 'An unexpected error occurred.');
     }
     setLoading(false);
   };
@@ -64,7 +68,9 @@ export default function AdminLogin({ setPage, setToken }) {
             'Sign In →'
           )}
         </button>
-        <p className="text-sm text-muted mt-2 text-center">Demo credentials: BEEKAY / LETSOELA</p>
+        <p className="text-sm text-muted mt-2 text-center">
+          <strong>Credentials:</strong> BEEKAY / LETSOELA
+        </p>
       </div>
     </div>
   );

@@ -8,12 +8,17 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const client = createClient({
-  url: process.env.TURSO_DATABASE_URL,
-  authToken: process.env.TURSO_AUTH_TOKEN,
+  url: process.env.TURSO_DATABASE_URL || '',
+  authToken: process.env.TURSO_AUTH_TOKEN || '',
 });
 
 // Initialize database tables if they don't exist
 async function initDb() {
+  console.log('Initializing database...');
+  if (!process.env.TURSO_DATABASE_URL) {
+    console.error('CRITICAL: TURSO_DATABASE_URL is not set!');
+  }
+
   try {
     await client.execute(`
       CREATE TABLE IF NOT EXISTS responses (
@@ -56,11 +61,16 @@ async function initDb() {
     // Add a default admin if none exists
     const adminCheck = await client.execute("SELECT * FROM admin WHERE username = 'BEEKAY'");
     if (adminCheck.rows.length === 0) {
+      console.log('Creating default admin user: BEEKAY');
       await client.execute({
         sql: "INSERT INTO admin (username, password) VALUES (?, ?)",
         args: ['BEEKAY', 'LETSOELA']
       });
+      console.log('Admin user created successfully.');
+    } else {
+      console.log('Admin user BEEKAY already exists.');
     }
+    console.log('Database initialization complete.');
   } catch (error) {
     console.error('Error initializing database:', error);
   }
